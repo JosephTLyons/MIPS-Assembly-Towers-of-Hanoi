@@ -37,6 +37,24 @@ main: # main program entry
     
        jal hanoi
 
-hanoi: 
+hanoi: beq  $a0, $zero, Leave
+
+       addi $sp, $sp, -16     # Make room for 4 arguments and return address
+       sw   $a0, 0($sp)       # Store n
+       sw   $a1, 4($sp)       # Store start
+       sw   $a2, 8($sp)       # Store finish
+       sw   $a3, 12($sp)      # Store extra
+       sw   $ra, 16($sp)      # Store returning address
+
+       addi $a0, $a0, -1      # Decrement n
+       j hanoi              
+
+
+
+
+
+
+
+Leave:
 
       ### Double check that I'm using good register conventions
