@@ -17,15 +17,11 @@ newline:       .asciiz "\n"
 
 # Variable Key:
 # $a0 = n
-# $s1 = $a1 = start  (1)
-# $s2 = $a2 = finish (2)
-# $s3 = $a3 = extra  (3)
+# $a1 = start  (1)
+# $a2 = finish (2)
+# $a3 = extra  (3)
 
 main:
-       addi $s1, $zero, 1     # Storing start
-       addi $s2, $zero, 2     # Storing finish
-       addi $s3, $zero, 3     # Stroing extra
-
        addi $v0, $zero, 4     # Load number for system call for printing string
        la   $a0, requestInput # Load string
        syscall
@@ -33,13 +29,12 @@ main:
        addi $v0, $zero, 5     # Load number for system call for reading number in
        syscall
     
-       addi $a0, $v0,   0     # Put user number in $a0
-       add  $a1, $s1, $zero   # Put 1 in $a1
-       add  $a2, $s2, $zero   # Put 2 in $a2
-       add  $a3, $s3, $zero,  # Put 3 in $a3
+       addi $a0, $v0, 0       # Put user number in $a0
+       addi $a1, $zero, 1     # Put 1 in $a1
+       addi $a2, $zero, 2     # Put 2 in $a2
+       addi $a3, $zero, 3     # Put 3 in $a3
     
-       jal hanoi
-Exit:  
+       jal Leave
 
 hanoi: addi $sp, $sp, -8      # Make room in stack
        sw   $ra, 4($sp)       # Store returning address
@@ -94,10 +89,14 @@ Skip:  addi $a0, $a0, -1      # Decrement n
        
        add  $a0, $t0, $zero   # recover n
        
+       
        addi $a0, $a0, -1      # Decrement n
-       add  $a1, $s2, $zero   # Put 2 in $a1
-       add  $a2, $s3, $zero   # Put 3 in $a2
-       add  $a3, $s1, $zero   # Put 1 in $a3
+       
+       add  $t0, $a1, $zero   # Temp holder for $a1 for swapping proceedure next
+       
+       add  $a1, $a2, $zero   # Put 2 in $a1
+       add  $a2, $a3, $zero   # Put 3 in $a2
+       add  $a3, $t0, $zero   # Put 1 in $a3
        j hanoi
        
        jr $ra
@@ -107,3 +106,5 @@ Leave:
 
       ### Double check that I'm using good register conventions
       ### Clean up commments and whitespace, remove ###s
+      ### Fix output bug
+      
