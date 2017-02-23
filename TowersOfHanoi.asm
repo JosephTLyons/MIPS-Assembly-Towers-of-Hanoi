@@ -8,8 +8,8 @@
 
 requestInput:  .asciiz "Enter number of disks: "
 moveDisk:      .asciiz "Move disk "
-fromPeg:       .asciiz "From peg "
-toPeg:         .asciiz "To peg "
+fromPeg:       .asciiz " from peg "
+toPeg:         .asciiz " to peg "
 newline:       .asciiz "\n"
 ################# Code segment #####################
 .text
@@ -20,6 +20,7 @@ newline:       .asciiz "\n"
 # $a1 = start
 # $a2 = finish
 # $a3 = extra
+# $t0 = 0 or 1 in slti instruction in Hanoi function
 
 main: # main program entry
 
@@ -35,24 +36,59 @@ main: # main program entry
        addi $a2, $zero, 2
        addi $a3, $zero, 3
     
-       jal hanoi
+       j hanoi
 
-hanoi: beq  $a0, $zero, Leave
-
-       addi $sp, $sp, -16     # Make room for 4 arguments and return address
+hanoi: addi $sp, $sp, -8     # Make room in stack
        sw   $a0, 0($sp)       # Store n
-       sw   $a1, 4($sp)       # Store start
-       sw   $a2, 8($sp)       # Store finish
-       sw   $a3, 12($sp)      # Store extra
-       sw   $ra, 16($sp)      # Store returning address
+       sw   $ra, 4($sp)      # Store returning address
 
-       addi $a0, $a0, -1      # Decrement n
-       j hanoi              
+       slti $t0, $a0, 1       # Test base case
+       beq  $t0, $zero, Skip
+       addi $sp, $sp, 8
+       jr $ra  
 
-
-
-
-
+Skip:  addi $a0, $a0, -1      # Decrement n
+       jal hanoi              
+       lw   $ra, 4($sp)      # Load returning address
+       lw   $a0, 0($sp)       # Load n
+       addi $sp, $sp, 8      # Make room in stack
+       
+       
+       ########
+       #Code for printing and dispaying numbers
+       
+       addi $v0, $zero, 4     # Load number for system call for printing string
+       la   $a0, moveDisk     # Load string
+       syscall
+    
+       addi $v0, $zero, 1     # Load number for system call for print number
+       add  $a0, $zero, $a1   # Move $a0 for printing
+       syscall
+       
+       addi $v0, $zero, 4     # Load number for system call for printing string
+       la   $a0, fromPeg      # Load string
+       syscall
+    
+       addi $v0, $zero, 1     # Load number for system call for print number
+       add  $a0, $zero, $a2   # Move $a1 for printing
+       syscall
+       
+       addi $v0, $zero, 4     # Load number for system call for printing string
+       la   $a0, toPeg        # Load string
+       syscall
+    
+       addi $v0, $zero, 1     # Load number for system call for print number
+       add  $a0, $zero, $a3   # Move $a2 for printing
+       syscall
+       
+       addi $v0, $zero, 4     # Load number for system call for printing string
+       la   $a0, newline        # Load string
+       syscall
+       
+       #########
+       
+       
+       jr $ra
 
 
 Leave:
