@@ -1,5 +1,5 @@
 # Title: Programming Project Part 3		#Filename: TowersOfHanoi.asm
-# Author: Joseph Lyons				#Date: February 22th, 2017
+# Author: Joseph Lyons				    #Date: February 22th, 2017
 # Description: Displays the moves needed to solve the puzzle of the towers of Hanoi
 # Input: Number of rings
 # Output: Steps for solving the problem
@@ -22,11 +22,11 @@ newline:      .asciiz "\n"
 # $a3 = extra
 
 main:
-       li   $v0, 4            # Load number for system call for printing string
-       la   $a0, requestInput # Load string
+       li $v0, 4              # Load number for system call for printing string
+       la $a0, requestInput   # Load string
        syscall
     
-       li   $v0, 5            # Load number for system call for reading number in
+       li $v0, 5              # Load number for system call for reading number in
        syscall
     
        addi $a0, $v0,   0     # Put user number in $a0
@@ -37,7 +37,7 @@ main:
        jal  hanoi
        j    Leave
 
-hanoi: addi $sp, $sp,  -20    # Make room in stack
+hanoi: addi $sp, $sp, -20     # Make room in stack
        sw   $ra, 16($sp)      # Store returning address
        sw   $a0, 12($sp)      # Store n
        sw   $a1, 8($sp)       # Store start
@@ -93,7 +93,7 @@ Skip:  addi $a0, $a0, -1      # Decrement n
        la   $a0, newline      # Load string
        syscall
        
-       add  $a0, $t0, $zero   # recover n  
+       add  $a0, $t0, $zero   # recover n
        addi $a0, $a0, -1      # Decrement n
        
        add  $t0, $a1, $zero   # Temp holder for $a1 for swapping proceedure next
