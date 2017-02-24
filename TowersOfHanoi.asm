@@ -54,7 +54,7 @@ Skip:  addi $a0, $a0, -1      # Decrement n
        add  $t0, $a2, $zero   # Temp holder for $a1 for swapping proceedure next
        add  $a2, $a3, $zero   # Swap
        add  $a3, $t0, $zero   # Swap
-       jal  hanoi
+       jal  hanoi             # Recursive call
        
        lw   $a3, 0($sp)       # Load Extra
        lw   $a2, 4($sp)       # Load Finish
@@ -99,7 +99,7 @@ Skip:  addi $a0, $a0, -1      # Decrement n
        add  $t0, $a1, $zero   # Temp holder for $a1 for swapping proceedure next
        add  $a1, $a3, $zero   # Swap
        add  $a3, $t0, $zero   # Swap
-       j    hanoi
+       j    hanoi             # Recursive call
        
        jr   $ra
 Leave:
