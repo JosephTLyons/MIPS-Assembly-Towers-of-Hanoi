@@ -17,9 +17,9 @@ newline:      .asciiz "\n"
 
 # Variable Key:
 # $a0 = n
-# $a1 = start  (1)
-# $a2 = finish (2)
-# $a3 = extra  (3)
+# $a1 = start
+# $a2 = finish
+# $a3 = extra
 
 main:
        li   $v0, 4            # Load number for system call for printing string
@@ -30,9 +30,9 @@ main:
        syscall
     
        addi $a0, $v0,   0     # Put user number in $a0
-       addi $a1, $zero, 1     # Put 1 in $a1
-       addi $a2, $zero, 2     # Put 2 in $a2
-       addi $a3, $zero, 3     # Put 3 in $a3
+       addi $a1, $zero, 1     # Put 1 in start
+       addi $a2, $zero, 2     # Put 2 in finish
+       addi $a3, $zero, 3     # Put 3 in extra
     
        jal  hanoi
        j    Leave
@@ -40,32 +40,28 @@ main:
 hanoi: addi $sp, $sp,  -20    # Make room in stack
        sw   $ra, 16($sp)      # Store returning address
        sw   $a0, 12($sp)      # Store n
-       sw   $a1, 8($sp)
-       sw   $a2, 4($sp)
-       sw   $a3, 0($sp)
+       sw   $a1, 8($sp)       # Store start
+       sw   $a2, 4($sp)       # Store finish
+       sw   $a3, 0($sp)       # Store extra
 
        slti $t0, $a0,   1     # Test base case
-       beq  $t0, $zero, Skip
-       addi $sp, $sp,   20
+       beq  $t0, $zero, Skip  # As long as n > 0, call recursively
+       addi $sp, $sp,   20    # If n = 0, adjust stack pointer and begin backtracing
        jr   $ra  
 
 Skip:  addi $a0, $a0, -1      # Decrement n
 
        add  $t0, $a2, $zero   # Temp holder for $a1 for swapping proceedure next
-       add  $a2, $a3, $zero   # Put 3 in $a2
-       add  $a3, $t0, $zero   # Put 2 in $a3
+       add  $a2, $a3, $zero   # Swap
+       add  $a3, $t0, $zero   # Swap
        jal  hanoi
        
-       lw   $a3, 0($sp)    
-       lw   $a2, 4($sp)                  
-       lw   $a1, 8($sp)                  
-       lw   $a0, 12($sp)       # Load n
-       lw   $ra, 16($sp)       # Load returning address
+       lw   $a3, 0($sp)       # Load Extra
+       lw   $a2, 4($sp)       # Load Finish
+       lw   $a1, 8($sp)       # Load start
+       lw   $a0, 12($sp)      # Load n
+       lw   $ra, 16($sp)      # Load returning address
        addi $sp, $sp, 20      # Adjust stack pointer
-       
-       
-       ########
-       #Code for printing and dispaying numbers
        
        add  $t0, $a0, $zero   # Back up n temporarily
        
@@ -97,25 +93,13 @@ Skip:  addi $a0, $a0, -1      # Decrement n
        la   $a0, newline      # Load string
        syscall
        
-       #########
-       
-       add  $a0, $t0, $zero   # recover n
-       
-       
+       add  $a0, $t0, $zero   # recover n  
        addi $a0, $a0, -1      # Decrement n
        
        add  $t0, $a1, $zero   # Temp holder for $a1 for swapping proceedure next
-       add  $a1, $a3, $zero   # Put 3 in $a1
-       add  $a2, $a2, $zero   # Put 2 in $a2
-       add  $a3, $t0, $zero   # Put 1 in $a3
+       add  $a1, $a3, $zero   # Swap
+       add  $a3, $t0, $zero   # Swap
        j    hanoi
        
        jr   $ra
-
-
 Leave:
-
-      ### Double check that I'm using good register conventions
-      ### Clean up commments and whitespace, remove ###s
-      ### Fix output bug
-      
