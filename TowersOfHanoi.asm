@@ -37,13 +37,16 @@ main:
        jal  hanoi
        j    Leave
 
-hanoi: addi $sp, $sp,  -8     # Make room in stack
-       sw   $ra, 4($sp)       # Store returning address
-       sw   $a0, 0($sp)       # Store n
+hanoi: addi $sp, $sp,  -20    # Make room in stack
+       sw   $ra, 16($sp)      # Store returning address
+       sw   $a0, 12($sp)      # Store n
+       sw   $a1, 8($sp)
+       sw   $a2, 4($sp)
+       sw   $a3, 0($sp)
 
        slti $t0, $a0,   1     # Test base case
        beq  $t0, $zero, Skip
-       addi $sp, $sp,   8
+       addi $sp, $sp,   20
        jr   $ra  
 
 Skip:  addi $a0, $a0, -1      # Decrement n
@@ -52,10 +55,13 @@ Skip:  addi $a0, $a0, -1      # Decrement n
        add  $a2, $a3, $zero   # Put 3 in $a2
        add  $a3, $t0, $zero   # Put 2 in $a3
        jal  hanoi
-                     
-       lw   $a0, 0($sp)       # Load n
-       lw   $ra, 4($sp)       # Load returning address
-       addi $sp, $sp, 8       # Adjust stack pointer
+       
+       lw   $a3, 0($sp)    
+       lw   $a2, 4($sp)                  
+       lw   $a1, 8($sp)                  
+       lw   $a0, 12($sp)       # Load n
+       lw   $ra, 16($sp)       # Load returning address
+       addi $sp, $sp, 20      # Adjust stack pointer
        
        
        ########
