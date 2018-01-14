@@ -1,5 +1,5 @@
 # Title: Programming Project Part 3		#Filename: TowersOfHanoi.asm
-# Author: Joseph Lyons				    #Date: February 22th, 2017
+# Author: Joseph Lyons				    #Date: February 22nd, 2017
 # Description: Displays the moves needed to solve the puzzle of the towers of Hanoi
 # Input: Number of rings
 # Output: Steps for solving the problem
